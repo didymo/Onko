@@ -101,7 +101,7 @@ class ISO2ROI:
                 z = temp_ds.ImagePositionPatient[2]
                 grid = get_dose_grid(rt_plan_dose, float(z))
 
-                if not (grid == []):
+                if not (len(grid) == 0):
                     if isodose_levels[item][0]:
                         dose_level = isodose_levels[item][1] / \
                                      (rt_plan_dose.DoseGridScaling * 100)

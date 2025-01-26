@@ -13,29 +13,31 @@ create = true
 in-project = true
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
+python = ">=3.9,<3.11"
 cython = "*"
-numpy = "1.23.0"
+numpy = "^1.26.0"
 platipy = "*"
 alphashape = "*"
 pandas = "^1.5.3"
 scikit-build = "*"
 scipy = "*"
 dicompyler-core = "*"
-pydicom = "*"
+# pydicom 3.x has changed some API and dicompyler-core breaks on that
+pydicom = "2.4.4"
 country-list = "*"
 scikit-image = "*"
 fuzzywuzzy = "*"
 PyWavelets = "1.3.0"
 networkx = "*"
 # pymedphys has reinstated psuedonymisation in 0.39
-pymedphys = { extras = ["user"], version =  "^0.39.3" }
+# something in OnkoDICOM does a recursive import on pymedphys, so now installing all extras in pymedphys
+pymedphys = { extras = ["all"], version =  "^0.40.0", python = ">=3.10.8,<3.11" }
 # until 20230611, the pyradiomics does not have wheel for py3.10. Will install it with pip later.
 # pyradiomics = [
 #    { version = "==3.0.1", python = "<3.10"},
 #    { version = "==3.0.1", python = ">=3.10"}
 #]
-pyside6 = "6.3.0"
+pyside6 = { version = ">=6.4.0,<6.5", python =">=3.10.8,<3.11" } 
 vtk = "*"
 shapely = ">=1.8.1,<2.0"
 python-Levenshtein = "*"

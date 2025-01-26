@@ -137,7 +137,7 @@ def test_calculate_prescription_dose_boundaries(test_object):
         [10, 25, 50, 75, 80, 85, 90, 95, 100, 105]
 
     # Calculate prescription dose boundaries
-    if not (grid == []):
+    if not (len(grid) == 0):
         for sd in isodose_percentages:
             dose_level = sd * rt_dose_dose / \
                          (rt_plan_dose.DoseGridScaling * 10000)

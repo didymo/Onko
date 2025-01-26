@@ -295,7 +295,7 @@ class DicomAxialView(DicomView):
         dataset_rtdose = self.patient_dict_container.dataset['rtdose']
         grid = get_dose_grid(dataset_rtdose, float(z))
 
-        if not (grid == []):
+        if not (len(grid) == 0):
             # sort selected_doses in ascending order so that the high dose isodose washes
             # paint over the lower dose isodose washes
             for sd in sorted(self.patient_dict_container.get("selected_doses")):
