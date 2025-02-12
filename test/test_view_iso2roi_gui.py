@@ -9,15 +9,15 @@ from pathlib import Path
 from pydicom import dcmread
 from pydicom.errors import InvalidDicomError
 
-from PySide6.QtCore import qInstallMessageHandler
-import traceback
+# from PySide6.QtCore import qInstallMessageHandler
+# import traceback
 
 
-def qt_message_handler(msg_type, context, message):
-    print(f"Qt Message - Type: {msg_type}")
-    print(f"Context: {context}")
-    print(f"Message: {message}")
-    print(f"Stack trace: {traceback.format_stack()}")
+# def qt_message_handler(msg_type, context, message):
+#     print(f"Qt Message - Type: {msg_type}")
+#     print(f"Context: {context}")
+#     print(f"Message: {message}")
+#     print(f"Stack trace: {traceback.format_stack()}")
 
 
 def find_DICOM_files(file_path):
@@ -48,7 +48,7 @@ class TestIso2RoiGui:
     """
 
     __test__ = False
-    qInstallMessageHandler(qt_message_handler)
+    # qInstallMessageHandler(qt_message_handler)
 
     def __init__(self):
         # Load test DICOM files

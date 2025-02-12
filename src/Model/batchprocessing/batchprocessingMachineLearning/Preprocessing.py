@@ -106,16 +106,13 @@ class Preprocessing:
         If it is numeric or list is empty it return
         initial pandas DF that was provided.
         """
-
         if self.type_column == 'category' and self.rename_values is not None:
-            for i in range(len(self.rename_values)):
-                clinical_data.loc[
-                    clinical_data[self.target] == i,
-                    self.target] = self.rename_values[i]
+            # Convert to categorical with proper mapping
+            value_map = {i: val for i, val in enumerate(self.rename_values)}
+            clinical_data[self.target] = clinical_data[self.target].map(value_map)
             return clinical_data
         else:
-            logging.debug('Function rename is not'
-                          'allowed for numerical values')
+            logging.debug('Function rename is not allowed for numerical values')
             return clinical_data
 
     def pre_processing_clinical_data(self, clinical_data):

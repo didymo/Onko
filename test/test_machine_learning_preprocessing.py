@@ -1,3 +1,4 @@
+import gc
 from pathlib import Path
 from src.Model.batchprocessing.batchprocessingMachineLearning.Preprocessing import Preprocessing
 
@@ -50,3 +51,8 @@ def test_preprocessing():
 
     # check if it is correctly split on test and train
     assert len(x_train) == 2 and len(x_test) == 2
+
+    # Explicit cleanup of DataFrames
+    del clinical_data, dvh, pyradiomics, full_data_set
+    del x_train, x_test, y_train, y_test
+    gc.collect()

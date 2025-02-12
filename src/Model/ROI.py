@@ -1237,7 +1237,7 @@ def geometry_to_roi(geometry_dict):
                             for coord in geometry.exterior.coords]
             contour_sequence.append(contour_data)
         elif geometry.geom_type in ['MultiPolygon', 'GeometryCollection']:
-            for sub_geometry in geometry:
+            for sub_geometry in geometry.geoms:
                 contour_data = []
                 if sub_geometry.geom_type == 'Polygon' \
                         and not sub_geometry.is_empty:

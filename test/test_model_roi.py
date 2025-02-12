@@ -203,9 +203,9 @@ def test_roi_to_geometry(test_object):
                 assert len(geometry.exterior.coords) - \
                        len(dict_rois_contours[roi_name][slice_id][0]) <= 1
             else:
-                for i in range(len(geometry)):
+                for i in range(len(geometry.geoms)):
                     if geometry.geom_type == "Polygon":
-                        assert len(geometry[i].exterior.coords) - \
+                        assert len(geometry.geoms[i].exterior.coords) - \
                                len(dict_rois_contours[roi_name][slice_id][i]) \
                                <= 1
 

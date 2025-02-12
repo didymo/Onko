@@ -32,12 +32,12 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - '3.9'
+          - '3.12'
           - '3.10'
           - '3.11'
         os:
-          - 'ubuntu-20.04'
-          # - 'ubuntu-22.04'
+          # - 'ubuntu-20.04'
+          - 'ubuntu-24.04'
 
     name: Build - ${{ matrix.os }} - Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
@@ -46,6 +46,7 @@ jobs:
     env:
       DISPLAY: ':99.0'
       TestDataUrl: 'https://zenodo.org/record/5147737/files/DICOM-RT-02.zip'
+      # USER_ONKODICOM_HIDDEN: '/tmp/.onkodicom'
 
     steps:
     - uses: actions/checkout@v3
@@ -75,11 +76,12 @@ jobs:
         # python -m pip install --upgrade pip wheel setuptools
         poetry install --no-root
 
-    - name: Workaround Install pyradiomics (no-use-pep517)
-        # https://github.com/AIM-Harvard/pyradiomics/issues/653#issuecomment-1245039225
-        # pyradiomics 3.1.0 has a metadata mismatch
-      run: |
-        poetry run pip install pyradiomics==3.0.1
+    # currently having poetry going straight to the github main branch for pyradiomics ~ 3.1.1
+    # - name: Workaround Install pyradiomics (no-use-pep517)
+    #     # https://github.com/AIM-Harvard/pyradiomics/issues/653#issuecomment-1245039225
+    #     # pyradiomics 3.1.0 has a metadata mismatch
+    #   run: |
+    #     poetry run pip install pyradiomics==3.0.1
 
     - name: Lint with flake8
       run: |
@@ -108,16 +110,29 @@ jobs:
 
     - name: Testing setup
       run: |
+        # sudo mkdir -p /tmp/.onkodicom
+        # sudo chmod 777 /tmp/.onkodicom
         sudo apt-get update
-        sudo apt-get install xvfb libxkbcommon-x11-0 herbstluftwm libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libopengl0 freeglut3 freeglut3-dev
+        sudo apt-get install xvfb libxkbcommon-x11-0 herbstluftwm libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libopengl0 libglut3.12 libglut-dev freeglut3-dev libgeos-c1v5 libgeos++-dev libgeos-dev libxcb-cursor0
+        # install everything related to xcb.  libxcb-cursor0 is required for Qt >=6.5 and it has numerous dependencies
+        sudo apt-get install -y libxcb1 libxcb-cursor0 libxcb-glx0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1
         # sudo Xvfb :1 -screen 0 1024x768x24 </dev/null &
         /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
         sleep 3
         herbstluftwm &
         sleep 1
+        # Check system resources
+        free -m
+        ulimit -a
 
     - name: Testing and Coverage with pytest
       run: |
+
+        # First try single test file without coverage as part of debugging Ubuntu 24.04 build
+        # export QT_DEBUG_PLUGINS=1
+        # export PYTHONFAULTHANDLER=1
+        # poetry run python -m pytest "test/test_machine_learning_preprocessing.py" -v -s
+
         # Append this for fail under x percent "--cov-fail-under=80"
         poetry run python -m pytest "test/" -v --durations=10 --cov-config=.coveragerc --cov-report term-missing --cov=.
 
@@ -128,7 +143,7 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - '3.9'
+          - '3.12'
           - '3.10'
           - '3.11'
         os:
@@ -174,10 +189,11 @@ jobs:
       run: |
         poetry install --no-root
 
-    - name: Workaround Install pyradiomics (no-use-pep517)
+    # currently having poetry going straight to the github main branch for pyradiomics ~ 3.1.1
+    #    - name: Workaround Install pyradiomics (no-use-pep517)
         # https://github.com/AIM-Harvard/pyradiomics/issues/653#issuecomment-1245039225
-      run: |
-        poetry run pip install pyradiomics==3.0.1
+    #  run: |
+    #    poetry run pip install pyradiomics==3.0.1
 
     - name: Lint with flake8
       run: |
